@@ -1,0 +1,22 @@
+import torch
+import torch.nn as nn
+import torchvision.transforms as transforms
+from torchvision import models
+from PIL import Image
+
+# Load a pre-trained semantic segmentation model (e.g., DeepLabV3)
+model = models.segmentation.deeplabv3_resnet50(pretrained=True)
+
+# Load an image
+image = Image.open('example_image.jpg')
+image = transforms.ToTensor()(image)
+
+# Make sure the model is in evaluation mode
+model.eval()
+
+# Forward pass to get the segmentation map
+with torch.no_grad():
+    output = model(image.unsqueeze(0))
+
+# The output contains the pixel-wise class labels for the image
+print(output['out'].shape)
